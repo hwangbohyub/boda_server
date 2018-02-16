@@ -1,17 +1,20 @@
+// Module 추가
 const express = require('express');
-const app = express();
 const http = require('http');
-const router = express.Router();
+const app = express();
 const server = http.createServer(app);
-const bodyParser = require('body-parser')
-const hostname = '117.16.197.11';
+
+// 서버 컴퓨터의 IP 주소
+const host = '192.168.0.23';
 const port = 3000;
 
-var p1 = require('./routes/p1.js')(app); //객체 app을 전달
-app.use('/p1', p1);
+// Router 사용하여 Routing
+var params = require('./routes/p1.js')(app); // 만약 routes 분리를 한 params.js에서 app 객체를 사용하고 싶다면
+app.use('/p1',params);
 
-server.listen(port, () => {
-    console.log(`Server is running at ${port}`);
+// Server Setting
+server.listen(port, host ,function(){
+ console.log(`Connect ${port}`);
 });
 
 module.exports = app;

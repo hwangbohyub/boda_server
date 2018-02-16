@@ -1,20 +1,32 @@
-var express = require('express');
-var mysql = require('mysql');
-var router = express.Router();
-
-var connection = mysql.createConnection({
-    postId : '',
-    letter : ''
-});
-
 module.exports = function(app){//함수로 만들어 객체 app을 전달받음
-	router.get('/:postId/:letter', function(req, res){
-    console.log(req.params.postId + " / " + req.params.letter)
-		res.json("Hi 1")
-	});
+	var express = require('express');
+	var mysql = require('mysql');
+	var router = express.Router();
 
-	router.get('/:postId', function(req, res){
-		res.json("Hi 2")
+	// DB 연결
+	var con = mysql.createConnection({
+		host     : 'localhost',
+		user     : 'root',
+		password : '1108',
+		database : 'braille'
 	});
-	return router;	//라우터를 리턴
+	con.connect();
+
+	router.get('/:letter',function(req,res){
+
+    // DB 작업 수행
+    var sql = `SELECT * FROM letter WHERE name='${req.params.letter}'`;
+    con.query(sql, function(err,rows,fields){
+      if(err){
+        console.log(err);
+      }else{
+				console.log("요청받은 Letter : " + req.params.letter);
+        console.log(rows);
+				console.log(typeof(rows))
+				// TODO: JSON 형식으로 보내기 ㅠㅠ
+				res.send(rows);
+      }
+    })
+  });
+  return router;
 };
